@@ -24,18 +24,13 @@ app.use(express.json({limit: '50mb'}))
 
 app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 
-
 app.use(cookieParser())
 
+
 app.use('/', express.static(path.join(__dirname, 'public')))
-
 app.use('/', require('./routes/root'))
+app.use('/auth', require('./routes/authRoutes'))
 app.use('/users', require('./routes/userRoutes'))
-
-//imagenes
-app.use('/images', require('./routes/imageRoutes'))
-
-//Noticias
 app.use('/noticias', require('./routes/noticiaRoutes'))
 
 app.all('*', (req, res) => {

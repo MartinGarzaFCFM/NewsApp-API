@@ -1,9 +1,5 @@
-const User = require("../models/User");
 const Noticia = require("../models/Noticia");
 const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcrypt");
-const firebaseStorage = require("firebase/storage");
-const storageRef = require("../config/firebaseConn");
 
 // @desc Get all users
 // @route GET /users
