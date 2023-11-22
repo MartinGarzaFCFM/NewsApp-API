@@ -18,9 +18,8 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // @route POST /users
 // @access Private
 const createNewUser = asyncHandler(async (req, res) => {
-  console.dir(req.body)
-  const { names, lastNames, email, password, username, roles } =
-    req.body;
+  console.dir(req.body);
+  const { names, lastNames, email, password, username, image, role } = req.body;
 
   //Confirm Data
   if (
@@ -29,8 +28,7 @@ const createNewUser = asyncHandler(async (req, res) => {
     !email ||
     !password ||
     !username ||
-    !Array.isArray(roles) ||
-    !roles.length
+    !role
   ) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -51,7 +49,8 @@ const createNewUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPwd,
     username,
-    roles,
+    image,
+    role
   };
 
   //Create and Store new user
@@ -65,11 +64,52 @@ const createNewUser = asyncHandler(async (req, res) => {
   }
 });
 
+const updateSelf = asyncHandler(async (req, res) => {
+  const { id, names, lastNames, email, username, password, image } = req.body;
+
+  if (
+    !id ||
+    !names ||
+    !lastNames ||
+    !email ||
+    !username ||
+    !password ||
+    !image
+  ) {
+    return res.status(400).json({ message: "Se necesitan todos lo campos" });
+  }
+
+  const user = await User.findById(id).exec();
+
+  if (!user) {
+    return res.status(400).json({ message: "Usuario no encontrado" });
+  }
+
+  const duplicate = await User.findOne({ username }).lean().exec();
+  if (duplicate && duplicate?._id.toString() !== id) {
+    return res.status(409).json({ message: "Duplicate username" });
+  }
+
+  user.names = names;
+  user.lastNames = lastNames;
+  user.email = email;
+  user.username = username;
+  user.image = image;
+
+  if (password) {
+    user.password = await bcrypt.hash(password, 10); //salt rounds
+  }
+
+  const updatedUser = await user.save();
+
+  res.json({ message: `${updatedUser.username} updated` });
+});
+
 // @desc Update a user
 // @route PATCH /users
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
-  const { id, names, lastNames, email, username, password, roles } = req.body;
+  const { id, names, lastNames, email, username, password, image, role } = req.body;
 
   //Confirm Data
   if (
@@ -78,8 +118,7 @@ const updateUser = asyncHandler(async (req, res) => {
     !lastNames ||
     !email ||
     !username ||
-    !Array.isArray(roles) ||
-    !roles.length
+    !role
   ) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -101,7 +140,8 @@ const updateUser = asyncHandler(async (req, res) => {
   user.lastNames = lastNames;
   user.email = email;
   user.username = username;
-  user.roles = roles;
+  user.roles = role;
+  user.image = image;
 
   if (password) {
     //Hash password
@@ -146,4 +186,5 @@ module.exports = {
   createNewUser,
   updateUser,
   deleteUser,
+  updateSelf
 };
