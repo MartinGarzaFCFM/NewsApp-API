@@ -16,25 +16,31 @@ const getAllNoticias = asyncHandler(async (req, res) => {
 // @route POST /users
 // @access Private
 const crearNoticia = asyncHandler(async (req, res) => {
-  const { title, subtitle, category, body, image, author } = req.body
+  const { title, subtitle, category, body, author, approved } = req.body
 
   const noticiaObject = {
     title,
     subtitle,
     category,
     body,
-    image,
     author,
+    approved
   };
 
   //Create and Store new user
   const noticia = await Noticia.create(noticiaObject);
 
+  console.log(noticia)
+
   if (noticia) {
     //Created
-    res.status(201).json({ message: `Nueva noticia "${title}" creada` });
+    console.log("SE CREO LA NOTICIA")
+    res.send(noticia)
+    //res.status(400).json({message: "mensaje creado"});
   } else {
-    res.status(400).json({ message: "Recibidos datos invalidos" });
+    console.log("FALLO LA NOTICIA")
+    res.send("FAIL")
+    //res.status(400).json({ message: "Recibidos datos invalidos" });
   }
 });
 

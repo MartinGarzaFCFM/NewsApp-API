@@ -22,11 +22,14 @@ const createNewImage = asyncHandler(async (req, res) => {
 
   const imagen = await Imagen.create(imagenObject)
 
+  console.log("IMAGEN STATUS")
+  console.dir(imagen)
+
   if (imagen) {
     //Created
-    res.status(201).json({ message: `Nueva imagen creada` });
+    res.send({message: `Imagen cargada para noticia ${noticiaId}`})
   } else {
-    res.status(400).json({ message: "Recibidos datos invalidos" });
+    res.send({message: `Imagen No se subio para ${noticiaId}`})
   }
 });
 
