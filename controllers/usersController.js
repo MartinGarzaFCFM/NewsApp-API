@@ -102,7 +102,9 @@ const updateSelf = asyncHandler(async (req, res) => {
 
   const updatedUser = await user.save();
 
-  res.json({ message: `${updatedUser.username} updated` });
+  const foundUser = await User.findOne({username}).exec()
+
+  res.json(foundUser);
 });
 
 // @desc Update a user
