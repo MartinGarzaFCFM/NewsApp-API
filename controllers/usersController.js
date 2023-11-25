@@ -14,6 +14,16 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
+const getUser = asyncHandler(async (req, res) => {
+  const {id} = req.params
+  const user = await User.findById(id).lean().exec();
+
+  if(!user)
+  return res.send({message: "No hay usuario con ese id."})
+
+  res.send(user)
+})
+
 // @desc Create new user
 // @route POST /users
 // @access Private
@@ -159,7 +169,9 @@ const updateUser = asyncHandler(async (req, res) => {
 // @route DELETE /users
 // @access Private
 const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.body;
+  console.log(req.params)
+  const { id } = req.params;
+
 
   if (!id) {
     return res.status(400).json({ message: "User ID Required" });
@@ -188,5 +200,6 @@ module.exports = {
   createNewUser,
   updateUser,
   deleteUser,
-  updateSelf
+  updateSelf,
+  getUser
 };

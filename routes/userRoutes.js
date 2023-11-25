@@ -11,4 +11,10 @@ router.route('/')
 router.route('/updateSelf')
 .patch(usersController.updateSelf)
 
+router.route('/:id')
+.get(usersController.getUser)
+
+router.route('/delete/:id')
+.delete(usersController.deleteUser)
+
 module.exports = router
