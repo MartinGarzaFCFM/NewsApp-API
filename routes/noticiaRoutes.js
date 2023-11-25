@@ -8,4 +8,6 @@ router.route('/')
     .patch(noticiasController.actualizarNoticia)
     .delete(noticiasController.borrarNoticia)
 
+router.route('/cImagenes').get(noticiasController.getNoticiasWImage)
+
 module.exports = router

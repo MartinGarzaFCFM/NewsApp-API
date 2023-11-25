@@ -6,8 +6,7 @@ const imagenSchema = new mongoose.Schema(
       required: true,
     },
     noticiaId: {
-      //type: mongoose.Schema.Types.ObjectId,
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Noticia",
     },

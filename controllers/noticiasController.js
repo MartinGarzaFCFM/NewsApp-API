@@ -9,7 +9,27 @@ const getAllNoticias = asyncHandler(async (req, res) => {
   if (!Noticias?.length) {
     return res.status(400).json({ message: "No hay noticias" });
   }
-  res.json(Noticias);
+  res.send(Noticias);
+});
+
+const getNoticiasWImage = asyncHandler(async (req, res) => {
+  const noticias = await Noticia.aggregate([
+    {
+      $match: {
+        approved: false
+      }
+    },
+    {
+      $lookup: {
+        from: 'imagens',
+        localField: '_id',
+        foreignField: 'noticiaId',
+        as: 'imagen'
+      }
+    }
+  ])
+
+  res.json(noticias);
 });
 
 // @desc Create new user
@@ -59,6 +79,7 @@ module.exports = {
   crearNoticia,
   actualizarNoticia,
   borrarNoticia,
+  getNoticiasWImage
 };
 
 

@@ -9,7 +9,7 @@ const getAllImages = asyncHandler(async (req, res) => {
   if (!content?.length) {
     return res.status(400).json({ message: "No images found" });
   }
-  res.json(content);
+  res.send(content);
 });
 
 const createNewImage = asyncHandler(async (req, res) => {
